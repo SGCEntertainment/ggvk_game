@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviour
     {
         if(id == 0)
         {
+            winPopupGO.SetActive(false);
             gameUIGo.SetActive(false);
             menuGo.SetActive(true);
         }

@@ -7,13 +7,13 @@ public class Grid : MonoBehaviour
 
     Cell[,] cells;
 
-    private void Awake()
+    public void InitCells()
     {
         cells = new Cell[height, width];
 
-        for(int y = 0; y < height; y++)
+        for (int y = 0; y < height; y++)
         {
-            for(int x = 0; x < width; x++)
+            for (int x = 0; x < width; x++)
             {
                 cells[y, x] = transform.GetChild(x + y * width).GetComponent<Cell>();
             }

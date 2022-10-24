@@ -18,9 +18,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    Grid grid;
     Cell lastColl;
     LineRenderer line;
+    bool win;
 
     public static int width = 7;
     public static int height = 7;
@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] Sprite middleEmoji;
     [SerializeField] Sprite angryEmoji;
     [SerializeField] Sprite funEmoji;
+
+    [Space(10)]
+    [SerializeField] Grid grid;
 
     int totalMiddleCount;
     int collectedMiddleCount;
@@ -54,23 +57,18 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonUp(0))
+        if(Input.GetMouseButtonUp(0) && grid.gameObject.activeSelf)
         {
-            if(CollectAllMiddle)
+            if(CollectAllMiddle && !win)
             {
+                win = true;
                 OnLevelCompleted?.Invoke();
+                line.gameObject.SetActive(false);
                 return;
             }
 
             ResetEmoji();
-
-            line.positionCount = 0;
-            collectedMiddleCount = 0;
-
-            activeCells.Clear();
-            middleCells.Clear();
-
-            SequenceStarted = false;
+            ResetGame();
         }
 
         UpdateLine();
@@ -86,7 +84,7 @@ public class GameManager : MonoBehaviour
 
     void CacheComponents()
     {
-        grid = FindObjectOfType<Grid>();
+        grid.InitCells();
         line = FindObjectOfType<LineRenderer>();
     }
 
@@ -113,8 +111,24 @@ public class GameManager : MonoBehaviour
         return levelDatas[levelId].levelString.ToCharArray();
     }
 
+    void ResetGame()
+    {
+        line.positionCount = 0;
+        collectedMiddleCount = 0;
+
+        activeCells.Clear();
+        middleCells.Clear();
+
+        SequenceStarted = false;
+    }
+
     public void LoadLevel(int levelId)
     {
+        ResetGame();
+
+        win = false;
+        totalMiddleCount = 0;
+
         char[] _level = GetLevelCharArray(levelId);
         int[,] intGrid = new int[height, width];
 
@@ -135,6 +149,7 @@ public class GameManager : MonoBehaviour
         
         grid.SetEmoji(intGrid);
         UIManager.Instance.OpenWindow(1);
+        line.gameObject.SetActive(true);
     }
 
     public void AddCell(Cell cell)
