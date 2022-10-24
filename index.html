@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>ggvk_game</title>
     <link rel="stylesheet" href="Data/style.css" />
+	<script src="https://yandex.ru/games/sdk/v2"></script>
   </head>
   <body style="text-align: center;">
     <canvas id="unity-canvas"></canvas>
@@ -28,10 +29,16 @@
 
       script.src = loaderUrl;
 
-      script.onload = async () => {
-        try {
-          await createUnityInstance(canvas,config);
-        } catch (error) {
+      script.onload = () => {
+        try 
+		{
+			YaGames.init();
+			window.ysdk = ysdk;
+    });
+          createUnityInstance(canvas,config);
+        } 
+		catch (error) 
+		{
           console.log(error);
         }
       };
