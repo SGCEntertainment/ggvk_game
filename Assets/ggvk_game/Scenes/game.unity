@@ -499,9 +499,9 @@ MonoBehaviour:
   middleEmoji: {fileID: 21300000, guid: 7bc1babc4a735ba4899574b172fd1be4, type: 3}
   angryEmoji: {fileID: 21300000, guid: d6da2d37aa7cca94fb035bc7fc56ad98, type: 3}
   funEmoji: {fileID: 21300000, guid: 454fb6f8c8a8e5f4faa864f1a993c9d2, type: 3}
+  SequenceStarted: 0
   levelDatas:
   - {fileID: 11400000, guid: 6f6ed96f1f449534d98d9d887b328a6a, type: 2}
-  activeCells: []
 --- !u!1 &125733806
 GameObject:
   m_ObjectHideFlags: 0
@@ -3179,7 +3179,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7748ced922874ac49bfe5aadd0503071, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3205,7 +3205,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.1
+    widthMultiplier: 0.3
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -3223,8 +3223,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 0, b: 0, a: 1}
-      key1: {r: 0, g: 0, b: 0, a: 1}
+      key0: {r: 0, g: 1, b: 0, a: 1}
+      key1: {r: 0, g: 1, b: 0, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -3250,11 +3250,11 @@ LineRenderer:
       m_Mode: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 90
+    numCapVertices: 90
     alignment: 0
     textureMode: 0
-    shadowBias: 0.5
+    shadowBias: 0
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0

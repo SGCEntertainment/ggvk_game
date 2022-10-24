@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     }
 
     Grid grid;
-    bool mousePressed;
+    Cell lastColl;
     LineRenderer line;
 
     public static int width = 7;
@@ -29,10 +29,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] Sprite angryEmoji;
     [SerializeField] Sprite funEmoji;
 
+    bool MousePressed
+    {
+        get => Input.GetMouseButton(0);
+    }
+
+    [HideInInspector]
+    public bool SequenceStarted;
+
     [Space(10)]
     [SerializeField] LevelData[] levelDatas;
-
-    public List<Cell> activeCells;
+    List<Cell> activeCells = new List<Cell>();
 
     private void Awake()
     {
@@ -46,9 +53,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        mousePressed = Input.GetMouseButton(0);
         if(Input.GetMouseButtonUp(0))
         {
+            //SequenceStarted = false;
             //line.positionCount = 0;
             //activeCells.Clear();
         }
@@ -104,13 +111,17 @@ public class GameManager : MonoBehaviour
 
     public void AddCell(Cell cell)
     {
-        //if(activeCells.Contains(cell) || !mousePressed)
-        //{
-        //    return;
-        //}
-
-        if (activeCells.Contains(cell))
+        if (activeCells.Count == 0 && cell.Icon == funEmoji)
         {
+            SequenceStarted = true;
+        }
+
+        bool isAngry = cell.Icon == angryEmoji;
+        bool lastAngry = lastColl != null && lastColl.Icon == angryEmoji;
+        bool canClose = activeCells.Count > 2 && cell.Icon == funEmoji;
+        if (!canClose && activeCells.Contains(cell) || isAngry || lastAngry || !SequenceStarted)
+        {
+            lastColl = cell;
             return;
         }
 
