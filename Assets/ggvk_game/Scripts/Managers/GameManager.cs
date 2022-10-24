@@ -52,11 +52,6 @@ public class GameManager : MonoBehaviour
         CacheComponents();
     }
 
-    private void Start()
-    {
-        LoadLevel(0);
-    }
-
     private void Update()
     {
         if(Input.GetMouseButtonUp(0))
@@ -139,6 +134,7 @@ public class GameManager : MonoBehaviour
         }
         
         grid.SetEmoji(intGrid);
+        UIManager.Instance.OpenWindow(1);
     }
 
     public void AddCell(Cell cell)
