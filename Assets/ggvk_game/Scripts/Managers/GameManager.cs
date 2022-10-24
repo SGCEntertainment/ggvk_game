@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     }
 
     public static int width = 7;
-    public static int height = 6;
+    public static int height = 7;
 
     Grid grid;
 

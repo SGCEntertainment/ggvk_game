@@ -6,6 +6,13 @@ public class Cell : MonoBehaviour
     public Sprite Icon
     {
         get => transform.GetChild(0).GetComponent<Image>().sprite;
-        set => transform.GetChild(0).GetComponent<Image>().sprite = value;
+
+        set
+        {
+            Image img = transform.GetChild(0).GetComponent<Image>();
+
+            img.enabled = value != null;
+            img.sprite = value;
+        }
     }
 }
