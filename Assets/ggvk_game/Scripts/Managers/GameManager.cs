@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,9 +29,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] Sprite angryEmoji;
     [SerializeField] Sprite funEmoji;
 
-    bool MousePressed
+    int totalMiddleCount;
+    int collectedMiddleCount;
+    bool CollectAllMiddle
     {
-        get => Input.GetMouseButton(0);
+        get => collectedMiddleCount == totalMiddleCount;
     }
 
     [HideInInspector]
@@ -40,6 +42,8 @@ public class GameManager : MonoBehaviour
     [Space(10)]
     [SerializeField] LevelData[] levelDatas;
     List<Cell> activeCells = new List<Cell>();
+
+    public static Action OnLevelCompleted;
 
     private void Awake()
     {
@@ -55,9 +59,14 @@ public class GameManager : MonoBehaviour
     {
         if(Input.GetMouseButtonUp(0))
         {
-            //SequenceStarted = false;
-            //line.positionCount = 0;
-            //activeCells.Clear();
+            if(CollectAllMiddle)
+            {
+                OnLevelCompleted?.Invoke();
+            }
+
+            SequenceStarted = false;
+            line.positionCount = 0;
+            activeCells.Clear();
         }
 
         UpdateLine();
@@ -102,7 +111,13 @@ public class GameManager : MonoBehaviour
             for(int x = 0; x < width; x++)
             {
                 char tmp = _level[x + y * width];
-                intGrid[y, x] = (int)char.GetNumericValue(tmp);
+                int id = (int)char.GetNumericValue(tmp);
+                if(id == 1)
+                {
+                    totalMiddleCount++;
+                }
+
+                intGrid[y, x] = id;
             }
         }
         
@@ -118,11 +133,22 @@ public class GameManager : MonoBehaviour
 
         bool isAngry = cell.Icon == angryEmoji;
         bool lastAngry = lastColl != null && lastColl.Icon == angryEmoji;
-        bool canClose = activeCells.Count > 2 && cell.Icon == funEmoji;
-        if (!canClose && activeCells.Contains(cell) || isAngry || lastAngry || !SequenceStarted)
+        //bool canClose = activeCells.Count > 2 && cell.Icon == funEmoji;
+        //if (!canClose && activeCells.Contains(cell) || isAngry || lastAngry || !SequenceStarted)
+        //{
+        //    lastColl = cell;
+        //    return;
+        //}
+
+        if (activeCells.Contains(cell) || isAngry || lastAngry || !SequenceStarted)
         {
             lastColl = cell;
             return;
+        }
+
+        if (cell.Icon == middleEmoji)
+        {
+            collectedMiddleCount++;
         }
 
         activeCells.Add(cell);
