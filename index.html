@@ -32,8 +32,7 @@
       script.onload = () => {
         try 
 		{
-			YaGames.init();
-			window.ysdk = ysdk;
+			YaGames.init().then(ysdk => {});
     });
           createUnityInstance(canvas,config);
         } 
