@@ -160,7 +160,6 @@ public class GameManager : MonoBehaviour
         }
 
         bool isAngry = cell.Icon == angryEmoji;
-        bool lastAngry = lastColl != null && lastColl.Icon == angryEmoji;
         //bool canClose = activeCells.Count > 2 && cell.Icon == funEmoji;
         //if (!canClose && activeCells.Contains(cell) || isAngry || lastAngry || !SequenceStarted)
         //{
@@ -168,9 +167,9 @@ public class GameManager : MonoBehaviour
         //    return;
         //}
 
-        if (activeCells.Contains(cell) || isAngry || lastAngry || !SequenceStarted)
+        if (activeCells.Contains(cell)  || isAngry || !SequenceStarted)
         {
-            lastColl = cell;
+            lastColl = isAngry  ? null : cell;
             return;
         }
 

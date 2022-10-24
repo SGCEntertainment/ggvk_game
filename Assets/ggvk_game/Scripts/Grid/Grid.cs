@@ -27,6 +27,7 @@ public class Grid : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 cells[y, x].Icon = GameManager.Instance.GetEmoji(grid[y,x]);
+                cells[y, x].name = $"[{y}:{x}]";
             }
         }
     }
