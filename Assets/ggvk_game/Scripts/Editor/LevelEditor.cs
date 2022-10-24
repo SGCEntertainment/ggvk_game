@@ -1,10 +1,13 @@
 using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEngine;
+using System.Linq;
 
 [CustomEditor(typeof(LevelData))]
 public class LevelEditor : Editor
 {
+    int selectedIndex;
+
     Texture2D currentTexture;
     VisualElement myInspector;
 
@@ -19,73 +22,79 @@ public class LevelEditor : Editor
         visualTree.CloneTree(myInspector);
 
         Button middleBtn = myInspector.Query<Button>("btn_middle");
-
         middleBtn.clickable.clicked += () =>
         {
+            selectedIndex = 1;
             currentTexture = middleBtn.resolvedStyle.backgroundImage.texture;
         };
 
         Button angryBtn = myInspector.Query<Button>("btn_angry");
         angryBtn.clickable.clicked += () =>
         {
+            selectedIndex = 2;
             currentTexture = angryBtn.resolvedStyle.backgroundImage.texture;
         };
 
         Button funBtn = myInspector.Query<Button>("btn_fun");
         funBtn.clickable.clicked += () =>
         {
+            selectedIndex = 3;
             currentTexture = funBtn.resolvedStyle.backgroundImage.texture;
         };
 
-        var cells = myInspector.Query<Button>("cell");
-        cells.ForEach((button) =>
+        Button eraserBtn = myInspector.Query<Button>("btn_eraser");
+        eraserBtn.clickable.clicked += () =>
         {
-            currentTexture = levelData.cells[0,0] switch
-            {
-                0 => middleBtn.resolvedStyle.backgroundImage.texture,
-                1 => angryBtn.resolvedStyle.backgroundImage.texture,
-                2 => funBtn.resolvedStyle.backgroundImage.texture,
-            };
+            selectedIndex = 0;
+            currentTexture = null;
+        };
 
-            StyleBackground styleBackground = new StyleBackground
-            {
-                value = new Background { texture = currentTexture }
-            };
+        char[] grid = levelData.levelString.ToCharArray();
 
-            button.style.backgroundImage = styleBackground;
+        VisualElement gridElement = myInspector.Query<VisualElement>("grid");
+        VisualElement[] rootBtnElement = gridElement.Children().ToArray();
+        
+        for(int i = 0; i < rootBtnElement.Length; i++)
+        {
+            char currentEmojiId = grid[i];
+            Button cellBtn = rootBtnElement[i][0] as Button;
 
-            button.clickable.clicked += () =>
+            Background background = new Background
             {
-                if (!currentTexture)
+                texture = currentEmojiId switch
                 {
-                    return;
+                    '1' => middleBtn.resolvedStyle.backgroundImage.texture,
+                    '2' => angryBtn.resolvedStyle.backgroundImage.texture,
+                    '3' => funBtn.resolvedStyle.backgroundImage.texture,
+
+                    _ => null
                 }
+            };
 
-                StyleBackground styleBackground = new StyleBackground
+            cellBtn.style.backgroundImage = new StyleBackground
+            { 
+                value = background
+            };
+
+            cellBtn.clickable.clicked += () =>
+            {
+                background = new Background
                 {
-                    value = new Background { texture = currentTexture }
+                    texture = currentTexture
                 };
 
-                button.style.backgroundImage = styleBackground;
-                
-                if(currentTexture.name == angryBtn.resolvedStyle.backgroundImage.texture.name)
+                cellBtn.style.backgroundImage = new StyleBackground
                 {
-                    //levelData.cell0 = 1;
-                    levelData.cells[0, 0] = 1;
-                }
-                else if (currentTexture.name == middleBtn.resolvedStyle.backgroundImage.texture.name)
-                {
-                    //levelData.cell0 = 0;
-                    levelData.cells[0, 0] = 0;
-                }
-                else if (currentTexture.name == funBtn.resolvedStyle.backgroundImage.texture.name)
-                {
-                    //levelData.cell0 = 2;
-                    levelData.cells[0, 0] = 2;
-                }
-            };
-        });
+                    value = background
+                };
 
+                int id = gridElement.IndexOf(cellBtn.parent);
+                grid[id] = selectedIndex.ToString()[0];
+                levelData.levelString = new string(grid); 
+            };
+        }
+
+        EditorUtility.SetDirty(target);
         return myInspector;
     }
 }
