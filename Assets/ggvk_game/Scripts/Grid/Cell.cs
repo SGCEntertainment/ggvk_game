@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class Cell : MonoBehaviour
+public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 {
     public Sprite Icon
     {
@@ -14,5 +15,15 @@ public class Cell : MonoBehaviour
             img.enabled = value != null;
             img.sprite = value;
         }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        GameManager.Instance.AddCell(this);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        GameManager.Instance.AddCell(this);
     }
 }
