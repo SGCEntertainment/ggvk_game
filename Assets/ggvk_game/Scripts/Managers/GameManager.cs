@@ -41,7 +41,9 @@ public class GameManager : MonoBehaviour
 
     [Space(10)]
     [SerializeField] LevelData[] levelDatas;
+
     List<Cell> activeCells = new List<Cell>();
+    List<Cell> middleCells = new List<Cell>();
 
     public static Action OnLevelCompleted;
 
@@ -62,14 +64,29 @@ public class GameManager : MonoBehaviour
             if(CollectAllMiddle)
             {
                 OnLevelCompleted?.Invoke();
+                return;
             }
 
-            SequenceStarted = false;
+            ResetEmoji();
+
             line.positionCount = 0;
+            collectedMiddleCount = 0;
+
             activeCells.Clear();
+            middleCells.Clear();
+
+            SequenceStarted = false;
         }
 
         UpdateLine();
+    }
+
+    void ResetEmoji()
+    {
+        foreach (Cell c in middleCells)
+        {
+            c.Icon = middleEmoji;
+        }
     }
 
     void CacheComponents()
@@ -151,6 +168,12 @@ public class GameManager : MonoBehaviour
             collectedMiddleCount++;
         }
 
+        if(cell.Icon == middleEmoji)
+        {
+            cell.Icon = funEmoji;
+            middleCells.Add(cell);
+        }
+  
         activeCells.Add(cell);
     }
 }
